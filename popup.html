@@ -1,0 +1,58 @@
+<html>
+  <head>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  </head>
+  <body style="width:300px;">
+	<ul class="nav nav-tabs" role="tablist">
+	  <li class="nav-item">
+		<a class="nav-link active" id="insert-tab" data-toggle="tab" href="#insert" role="tab" aria-controls="insert" aria-selected="true">Insert</a>
+	  </li>
+	  <li class="nav-item">
+		<a class="nav-link" id="search-tab" data-toggle="tab" href="#search" role="tab" aria-controls="search" aria-selected="false">Search</a>
+	  </li>
+	  <li class="nav-item">
+		<a class="nav-link" id="delete-tab" data-toggle="tab" href="#delete" role="tab" aria-controls="delete" aria-selected="false">Delete</a>
+	  </li>
+	</ul>
+
+	<div id="content" class="tab-content">
+	  <div class="tab-pane fade show active" id="insert" role="tabpanel" aria-labelledby="insert-tab">
+		<p>
+		  title:<input id="insert-title" type="text" value=""/>
+		</p>
+		<p>
+		  url:<input id="insert-url" type="text" value=""/>
+		</p>
+		<p>
+		  memo:<textarea cols="30" id="insert-memo" rows="10"></textarea>
+		</p>
+		<p>
+		  <input id="insert-submit" type="submit" value="submit"/>
+		</p>
+	  </div>
+	  <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="search-tab">
+		<p>
+		  query:<input id="search-query" type="text" value=""/>
+		</p>
+		<p>
+		  url:<input id="search-url" type="text" value=""/>
+		</p>
+		<p>
+		  <input id="search-submit" type="submit" value="submit"/>
+		</p>
+		<h3>Search Result</h3>
+		  <hr/>
+		  <ul id="search-result">
+
+		  </ul>
+		  <hr/>
+	  </div>
+	  <div class="tab-pane fade" id="delete" role="tabpanel" aria-labelledby="delete-tab">
+		<button id="delete-submit">Delete</button>
+	  </div>
+	</div>
+	<script src="popup.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
