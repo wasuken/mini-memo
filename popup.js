@@ -10,10 +10,13 @@ let insertSubmit = document.getElementById('insert-submit');
 insertSubmit.onclick = function(element) {
 	let titleInput = document.getElementById('insert-title');
 	let urlInput = document.getElementById('insert-url');
+	let tagsInput = document.getElementById('insert-tags');
 	let memoInput = document.getElementById('insert-memo');
+	let tags = tagsInput.value.split(',').map(x => x.trim()).filter(x => x.length > 0);
 	let record = {
 		title: titleInput.value,
 		url: urlInput.value,
+		tags: tags,
 		memo: memoInput.value
 	};
 	chrome.storage.sync.get('records', function(data) {
@@ -21,11 +24,12 @@ insertSubmit.onclick = function(element) {
 		if(records == undefined){
 			records = {};
 		}
-		records[record.title] = record;
+		records[record.title + record.url] = record;
 		chrome.storage.sync.set({records: records}, function() {});
 	});
 	titleInput.value = "";
 	urlInput.value = "";
+	tagsInput.value = "";
 	memoInput.value = "";
 };
 
@@ -38,14 +42,27 @@ searchSubmit.onclick = function(element) {
 		}
 
 		let queryInput = document.getElementById('search-query');
+		let urlInput = document.getElementById('search-url');
+		let tagsInput = document.getElementById('search-tags');
 
 		let result = Object.keys(records).filter(x => {
-			console.log(records);
-
 			return x.indexOf(queryInput.value) > -1 ||
 				records[x].url.indexOf(queryInput.value) > -1 ||
+				records[x].tags.join(',').indexOf(queryInput.value) > -1 ||
 				records[x].memo.indexOf(queryInput.value) > -1;
 		});
+		// ええ...
+		if(urlInput.value.length > 0){
+			result = result.filter(x => records[x].url.indexOf(urlInput.value) > -1);
+		}
+		if(tagsInput.value.length){
+			result = result.filter(x => {
+				tagsInput.value.split(',')
+					.map(x => x.trim())
+					.filter(x => x.length > 0)
+					.some(y => records[x].tags.includes(y))
+			});
+		}
 
 		let content = document.getElementById('content');
 		let searchResult = document.getElementById('search-result');
@@ -60,11 +77,13 @@ searchSubmit.onclick = function(element) {
 				title: x.title,
 				url: x.url,
 				memo: x.memo,
+				tags: x.tags,
 				handleEvent: function(){
 					document.getElementById('insert-tab').click();
 
 					document.getElementById('insert-title').value = this.title;
 					document.getElementById('insert-url').value = this.url;
+					document.getElementById('insert-tags').value = this.tags.join(',');
 					document.getElementById('insert-memo').value = this.memo;
 				}
 			});
